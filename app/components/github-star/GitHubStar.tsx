@@ -15,7 +15,7 @@ export default function GitHubStar() {
   useEffect(() => {
     const fetchStars = async () => {
       try {
-        const response = await fetch('https://api.github.com/repos/gayret/ataturk')
+        const response = await fetch('https://api.github.com/repos/ataturk-kronolojisi/web')
         const data: GitHubRepo = await response.json()
         setStars(data.stargazers_count)
       } catch (error) {
@@ -32,7 +32,7 @@ export default function GitHubStar() {
 
   return (
     <Link
-      href='https://github.com/gayret/ataturk'
+      href='https://github.com/ataturk-kronolojisi/web'
       target='_blank'
       rel='noopener noreferrer'
       className={styles.githubStar}
