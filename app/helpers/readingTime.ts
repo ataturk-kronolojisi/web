@@ -1,10 +1,6 @@
-import { QuoteType } from '../components/content/Content'
+import type { EventImage, QuoteType } from '@/app/types'
 
-export interface EventImage {
-  url: string
-  alt: string
-  source: string
-}
+export type { EventImage }
 
 export interface EventContent {
   title: string

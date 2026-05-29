@@ -5,39 +5,20 @@ import { useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 import Header from '@/app/components/header/Header'
 import Timeline from '@/app/components/timeline/Timeline'
-import About from '@/app/components/about/About'
-import Balloons from '@/app/components/ceremonies/widgets/ballons/Balloons'
-import Clouds from '@/app/components/ceremonies/widgets/clouds/Clouds'
+import Content from '@/app/components/content/Content'
 import ActionButtons from '@/app/components/action-buttons/ActionButtons'
-import Ceremonies from '@/app/components/ceremonies/Ceremonies'
-import Content, { QuoteType } from '@/app/components/content/Content'
 import SupportMe from '../support-me/SupportMe'
 import GitHubStar from '../github-star/GitHubStar'
+import type { EventItem, EventLocation } from '@/app/types'
 
-interface EventImage {
-  url: string
-  alt: string
-  source: string
-}
-
-interface EventLocation {
-  lat: number
-  lon: number
-}
-
-interface Event {
-  id: number
-  title: string
-  description?: string | null
-  quotes?: QuoteType[]
-  date: string
-  location: EventLocation
-  images: EventImage[]
-  source: string
-}
+const About = dynamic(() => import('@/app/components/about/About'), { ssr: false })
+const Balloons = dynamic(() => import('@/app/components/ceremonies/widgets/ballons/Balloons'), { ssr: false })
+const Clouds = dynamic(() => import('@/app/components/ceremonies/widgets/clouds/Clouds'), { ssr: false })
+const Ceremonies = dynamic(() => import('@/app/components/ceremonies/Ceremonies'), { ssr: false })
+const MapWithNoSSR = dynamic(() => import('@/app/components/map/Map'), { ssr: false })
 
 interface HomeClientProps {
-  events: Event[]
+  events: EventItem[]
 }
 
 const SECRET_CODE = 'sadeceharita'
@@ -99,14 +80,6 @@ export default function HomeClient({ events }: HomeClientProps) {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [currentId])
-
-  const MapWithNoSSR = useMemo(
-    () =>
-      dynamic(() => import('@/app/components/map/Map'), {
-        ssr: false,
-      }),
-    [],
-  )
 
   const selectedEvent = events.find((item) => item.id === Number(currentId)) || events[0]
   const selectedLocation = selectedEvent?.location || events[0]?.location

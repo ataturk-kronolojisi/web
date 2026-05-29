@@ -119,7 +119,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='tr'>
+    <html lang='tr' suppressHydrationWarning>
       <head>
         <script
           type='application/ld+json'

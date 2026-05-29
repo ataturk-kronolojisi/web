@@ -2,22 +2,17 @@
 
 import styles from './CorrectOrder.module.css'
 import { useEventsData } from '@/app/helpers/data'
-import { ItemType } from '@/app/components/content/Content'
+import type { EventItem, AttemptResult } from '@/app/types'
 import { useEffect, useState } from 'react'
 import { useLanguageStore } from '@/app/stores/languageStore'
 import Select from './widgets/select/Select'
 import Card from './widgets/card/Card'
 import Share from './widgets/share/Share'
 
-interface AttemptResult {
-  attempt: number
-  results: { cardId: number; position: number; isCorrect: boolean }[]
-}
-
 export default function CorrectOrder() {
   const events = useEventsData()
   const { t } = useLanguageStore()
-  const [randomEvents, setRandomEvents] = useState<ItemType[]>([])
+  const [randomEvents, setRandomEvents] = useState<EventItem[]>([])
   const [selectedEvents, setSelectedEvents] = useState<(number | '')[]>(['', '', ''])
   const [feedback, setFeedback] = useState<string>('')
   const [showDates, setShowDates] = useState<boolean>(false)

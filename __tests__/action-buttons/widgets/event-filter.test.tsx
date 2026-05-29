@@ -3,6 +3,7 @@
 import { describe, it, expect } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import '../test-utils'
+import { mockRouterReplace } from '../test-utils'
 import EventFilter from '@/app/components/action-buttons/widgets/event-filter/EventFilter'
 
 describe('EventFilter', () => {
@@ -12,7 +13,10 @@ describe('EventFilter', () => {
     fireEvent.click(screen.getByTitle('Filtreyi Ac'))
     fireEvent.click(screen.getByTitle('Kisisel'))
 
-    expect(window.location.search).toContain('displayed-locations=personal')
+    expect(mockRouterReplace).toHaveBeenCalledWith(
+      expect.stringContaining('displayed-locations=personal'),
+      { scroll: false }
+    )
   })
 
   it('disariya tiklaninca filtre panelini kapatir', () => {

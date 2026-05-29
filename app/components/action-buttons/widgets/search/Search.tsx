@@ -8,8 +8,7 @@ import Image from 'next/image'
 import iconSearch from '../../../../assets/icons/search.svg'
 import iconClose from '../../../../assets/icons/close.svg'
 import { useLanguageStore } from '@/app/stores/languageStore'
-
-type QuoteLike = string | { text?: string; '-text'?: string; source?: string }
+import type { QuoteLike } from '@/app/types'
 
 const normalizeQuotes = (quotes: unknown): QuoteLike[] => {
   if (Array.isArray(quotes)) {

@@ -6,6 +6,7 @@ import {
   MAX_QUOTES_PER_REQUEST,
   QuoteQuery,
 } from '@/app/helpers/quotes'
+import type { LanguageCode } from '@/app/types'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,6 +16,15 @@ const corsHeaders = {
 
 const cacheHeaders = {
   'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+}
+
+const SUPPORTED_LANGUAGES: LanguageCode[] = ['tr', 'en', 'de', 'es']
+
+const parseLanguage = (value: string | null): LanguageCode => {
+  if (value && SUPPORTED_LANGUAGES.includes(value as LanguageCode)) {
+    return value as LanguageCode
+  }
+  return 'tr'
 }
 
 const parseBoolean = (value: string | null, fallback: boolean) => {
@@ -34,8 +44,7 @@ export function OPTIONS() {
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
-  const languageParam = searchParams.get('language')
-  const language = languageParam === 'en' ? 'en' : 'tr'
+  const language = parseLanguage(searchParams.get('language'))
   const query: QuoteQuery = {
     quoteId: searchParams.get('quoteId'),
     eventId: parseNumber(searchParams.get('eventId')),
