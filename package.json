@@ -5,7 +5,7 @@
   "packageManager": "npm@11.6.2",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "node scripts/generate-events-json.js && next build",
+    "build": "node scripts/generate-events-json.mjs && next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",

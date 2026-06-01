@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import styles from './ActionButtons.module.css'
 import { useSearchParams } from 'next/navigation'
@@ -28,8 +28,8 @@ export default function ActionButtons({
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const selectedItem =
-    events.find((item) => item.id === Number(searchParams.get("id"))) ||
-    events[0];
+    events.find((item) => item.id === Number(searchParams.get('id'))) || events[0]
+  const selectedLocation = selectedItem?.location
 
   if (showOnlyLanguageSelector) {
     return (
@@ -46,11 +46,14 @@ export default function ActionButtons({
           <>
             <OpenCorrectOrderGame />
 
-            <StreetView lat={selectedItem?.location.lat} lon={selectedItem?.location.lon} />
+            {selectedLocation && (
+              <>
+                <StreetView lat={selectedLocation.lat} lon={selectedLocation.lon} />
+                <Direction lat={selectedLocation.lat} lon={selectedLocation.lon} />
+              </>
+            )}
 
             <EventFilter />
-
-            <Direction lat={selectedItem?.location.lat} lon={selectedItem?.location.lon} />
 
             <Search />
 

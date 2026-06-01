@@ -12,8 +12,12 @@ import GitHubStar from '../github-star/GitHubStar'
 import type { EventItem, EventLocation } from '@/app/types'
 
 const About = dynamic(() => import('@/app/components/about/About'), { ssr: false })
-const Balloons = dynamic(() => import('@/app/components/ceremonies/widgets/ballons/Balloons'), { ssr: false })
-const Clouds = dynamic(() => import('@/app/components/ceremonies/widgets/clouds/Clouds'), { ssr: false })
+const Balloons = dynamic(() => import('@/app/components/ceremonies/widgets/ballons/Balloons'), {
+  ssr: false,
+})
+const Clouds = dynamic(() => import('@/app/components/ceremonies/widgets/clouds/Clouds'), {
+  ssr: false,
+})
 const Ceremonies = dynamic(() => import('@/app/components/ceremonies/Ceremonies'), { ssr: false })
 const MapWithNoSSR = dynamic(() => import('@/app/components/map/Map'), { ssr: false })
 
@@ -22,6 +26,7 @@ interface HomeClientProps {
 }
 
 const SECRET_CODE = 'sadeceharita'
+const DEFAULT_MAP_LOCATION: EventLocation = { lat: 39.0, lon: 35.0 }
 
 function removeElements() {
   const selectorsByTag = ['header']
@@ -82,7 +87,10 @@ export default function HomeClient({ events }: HomeClientProps) {
   }, [currentId])
 
   const selectedEvent = events.find((item) => item.id === Number(currentId)) || events[0]
-  const selectedLocation = selectedEvent?.location || events[0]?.location
+  const selectedLocation =
+    selectedEvent?.location ||
+    events.find((item) => item.location)?.location ||
+    DEFAULT_MAP_LOCATION
 
   if (currentId === 'about') {
     return (

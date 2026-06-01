@@ -1,19 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { useLanguageStore } from '../stores/languageStore'
+import type { EventItem } from '@/app/types'
 
-type EventData = {
-  id: number
-  title: string
-  date: string
-  description: string
-  category?: string
-  location?: { lat: number; lon: number }
-  images?: { src: string; alt: string }[]
-  quotes?: { text: string; source?: string }[]
-  sounds?: { src: string; label?: string }[]
-  source?: string
-}
+type EventData = EventItem
 
 const dataImporters: Record<string, () => Promise<{ default: EventData[] }>> = {
   tr: () => import('../json/events_tr.json'),
