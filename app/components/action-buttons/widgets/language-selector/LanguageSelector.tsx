@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import styles from "./LanguageSelector.module.css";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
@@ -10,14 +10,14 @@ import { availableLanguages } from "@/app/stores/languageStore";
 import chevronRight from "@/app/assets/icons/chevron-right.svg";
 
 export default function LanguageSelector() {
-  const router = useRouter();
+  const searchParams = useSearchParams();
   const { t, setLanguage, currentLanguageCode } = useLanguageStore();
   const languageRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = (langCode: string) => {
     const url = new URL(window.location.href);
     url.searchParams.set("language", langCode);
-    router.replace(url.toString(), { scroll: false });
+    window.history.pushState({}, "", url.toString());
     setLanguage(langCode);
     setOpen(false);
   };

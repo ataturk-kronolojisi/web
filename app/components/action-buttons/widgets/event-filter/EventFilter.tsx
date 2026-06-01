@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import styles from "./EventFilter.module.css";
@@ -10,7 +10,6 @@ import { useLanguageStore } from "@/app/stores/languageStore";
 
 export default function EventFilter() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguageStore();
@@ -39,7 +38,7 @@ export default function EventFilter() {
     } else {
       url.searchParams.delete("displayed-locations");
     }
-    router.replace(url.toString(), { scroll: false });
+    window.history.pushState({}, "", url.toString());
   };
 
   // Eğer kullanıcı sayfanın dışına tıklarsa open'ı false yap

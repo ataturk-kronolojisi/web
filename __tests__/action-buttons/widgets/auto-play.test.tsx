@@ -4,7 +4,6 @@ import React from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render } from '@testing-library/react'
 import '../test-utils'
-import { mockRouterReplace } from '../test-utils'
 
 vi.mock('@/app/components/action-buttons/widgets/auto-play/widgets/timer/Timer', () => ({
   default: () => <div data-testid='timer' />,
@@ -51,10 +50,7 @@ describe('AutoPlay', () => {
     const [mainButton] = container.querySelectorAll('[data-auto-play-button="true"]')
     fireEvent.click(mainButton)
 
-    expect(mockRouterReplace).toHaveBeenCalledWith(
-      expect.stringContaining('auto-play=true'),
-      { scroll: false }
-    )
+    expect(window.location.search).toContain('auto-play=true')
     expect(document.documentElement.requestFullscreen).toHaveBeenCalled()
   })
 
@@ -66,10 +62,7 @@ describe('AutoPlay', () => {
     fireEvent.click(getMainButton() as HTMLElement)
     fireEvent.click(getMainButton() as HTMLElement)
 
-    expect(mockRouterReplace).toHaveBeenLastCalledWith(
-      expect.not.stringContaining('auto-play=true'),
-      { scroll: false }
-    )
+    expect(window.location.search).not.toContain('auto-play=true')
     expect(document.exitFullscreen).toHaveBeenCalled()
   })
 })

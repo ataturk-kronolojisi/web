@@ -6,16 +6,17 @@ import tr from '../locale/tr.json'
 import en from '../locale/en.json'
 import de from '../locale/de.json'
 import es from '../locale/es.json'
-import type { LanguageOption } from '@/app/types'
 
 type LocaleData = typeof tr
 
-interface LanguageConfig extends LanguageOption {
+interface Language {
+  code: string
+  name: string
   file: LocaleData
 }
 
 // Desteklenen diller
-export const availableLanguages: LanguageConfig[] = [
+export const availableLanguages: Language[] = [
   {
     code: 'tr',
     name: 'Türkçe',

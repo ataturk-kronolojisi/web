@@ -3,7 +3,7 @@
 import styles from './Timeline.module.css'
 import { useEventsData } from '@/app/helpers/data'
 import { getYear } from '@/app/helpers/date'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useRef, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 
@@ -13,7 +13,6 @@ import chevronRight from '@/app/assets/icons/chevron-right.svg'
 export default function Timeline() {
   const events = useEventsData()
   const searchParams = useSearchParams()
-  const router = useRouter()
 
   const timelineContainerRef = useRef<HTMLDivElement>(null)
 
@@ -36,7 +35,7 @@ export default function Timeline() {
   const onOpenId = (id: number) => () => {
     const url = new URL(window.location.href)
     url.searchParams.set('id', id.toString())
-    router.replace(url.toString(), { scroll: false })
+    window.history.pushState({}, '', url.toString())
   }
 
   useEffect(() => {
@@ -59,8 +58,8 @@ export default function Timeline() {
     const currentIndex = events.findIndex((item) => item.id === Number(currentId))
     const prevIndex = (currentIndex - 1 + events.length) % events.length
     url.searchParams.set('id', events[prevIndex].id.toString())
-    router.replace(url.toString(), { scroll: false })
-  }, [searchParams, events, router])
+    window.history.pushState({}, '', url.toString())
+  }, [searchParams, events])
 
   const onGoNext = useCallback(() => {
     const url = new URL(window.location.href)
@@ -69,8 +68,8 @@ export default function Timeline() {
     const nextIndex = (currentIndex + 1) % events.length
 
     url.searchParams.set('id', events[nextIndex].id.toString())
-    router.replace(url.toString(), { scroll: false })
-  }, [searchParams, events, router])
+    window.history.pushState({}, '', url.toString())
+  }, [searchParams, events])
 
   useEffect(() => {
     // Handle keyboard navigation for left and right arrows
@@ -167,18 +166,12 @@ export default function Timeline() {
   }, [])
 
   return (
-    <section className={styles.timeline} aria-label='Kronoloji'>
-      <button className={styles.actionButton} onClick={onGoPrev} aria-label='Önceki etkinliğe git'>
-        <Image src={chevronLeft} alt='' width={24} height={24} aria-hidden='true' />
+    <section className={styles.timeline}>
+      <button className={styles.actionButton} onClick={onGoPrev}>
+        <Image src={chevronLeft} alt='Önceki' width={24} height={24} />
       </button>
 
-      <div
-        className={styles.timelineContainer}
-        ref={timelineContainerRef}
-        data-timeline-container
-        role='tablist'
-        aria-label='Yıllar'
-      >
+      <div className={styles.timelineContainer} ref={timelineContainerRef} data-timeline-container>
         {uniqueYears.map((item, index) => {
           const activeId = Number(searchParams.get('id'))
           const isActiveYear = item.ids.includes(activeId)
@@ -186,16 +179,10 @@ export default function Timeline() {
           return (
             <div
               key={index}
-              role='tab'
+              role='button'
               tabIndex={0}
               onClick={(e) => {
                 if (!(e.target as HTMLElement).classList.contains(styles.dot)) {
-                  onOpenId(item.ids[0])()
-                }
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
                   onOpenId(item.ids[0])()
                 }
               }}
@@ -206,8 +193,7 @@ export default function Timeline() {
                     : `${styles.active} ${styles.single}`
                   : ''
               }`}
-              aria-label={`${item.year} yılına git`}
-              aria-selected={isActiveYear}
+              aria-label={`Go to ${item.year} section`}
               data-year={item.year}
               style={{
                 scrollSnapAlign: 'center',
@@ -215,23 +201,15 @@ export default function Timeline() {
               }}
             >
               {isActiveYear && item.items.length > 1 && (
-                <div className={styles.dotsWrapperFromTop} role='group' aria-label={`${item.year} yılı etkinlikleri`}>
+                <div className={styles.dotsWrapperFromTop}>
                   {item.items.map((subItem) => (
                     <span
                       key={subItem.id}
                       className={`${styles.dot} ${subItem.id === activeId ? styles.dotActive : ''}`}
                       onClick={() => onOpenId(subItem.id)()}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault()
-                          onOpenId(subItem.id)()
-                        }
-                      }}
                       title={subItem.title}
                       role='button'
                       tabIndex={0}
-                      aria-label={subItem.title}
-                      aria-current={subItem.id === activeId ? 'true' : undefined}
                     ></span>
                   ))}
                 </div>
@@ -239,23 +217,15 @@ export default function Timeline() {
               <div className={styles.timelineDate}>{item.year}</div>
 
               {isActiveYear && item.items.length > 1 && (
-                <div className={styles.dotsWrapperFromBottom} role='group' aria-label={`${item.year} yılı etkinlikleri`}>
+                <div className={styles.dotsWrapperFromBottom}>
                   {item.items.map((subItem) => (
                     <span
                       key={subItem.id}
                       className={`${styles.dot} ${subItem.id === activeId ? styles.dotActive : ''}`}
                       onClick={() => onOpenId(subItem.id)()}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault()
-                          onOpenId(subItem.id)()
-                        }
-                      }}
                       title={subItem.title}
                       role='button'
                       tabIndex={0}
-                      aria-label={subItem.title}
-                      aria-current={subItem.id === activeId ? 'true' : undefined}
                     ></span>
                   ))}
                 </div>
@@ -265,8 +235,8 @@ export default function Timeline() {
         })}
       </div>
 
-      <button className={styles.actionButton} onClick={onGoNext} aria-label='Sonraki etkinliğe git'>
-        <Image src={chevronRight} alt='' width={24} height={24} aria-hidden='true' />
+      <button className={styles.actionButton} onClick={onGoNext}>
+        <Image src={chevronRight} alt='Sonraki' width={24} height={24} />
       </button>
     </section>
   )

@@ -2,18 +2,22 @@ import eventsTr from '@/app/json/events_tr.json'
 import eventsEn from '@/app/json/events_en.json'
 import eventsDe from '@/app/json/events_de.json'
 import eventsEs from '@/app/json/events_es.json'
-import type { EventImage, LanguageCode } from '@/app/types'
+import { QuoteType } from '../components/content/Content'
 
-export type Language = LanguageCode
+export type Language = 'tr' | 'en' | 'de' | 'es'
 
-type RawEventImage = EventImage
+type RawEventImage = {
+  url: string
+  alt: string
+  source?: string
+}
 
 type RawEvent = {
   id: number
   date: string
   title: string
   description?: string
-  quotes?: Array<string | { text?: string; source?: string }>
+  quotes?: QuoteType[]
   images?: RawEventImage[]
   category?: string
 }
@@ -26,9 +30,9 @@ export type QuoteRecord = {
   description?: string
   quote: string
   source?: string
-  language: LanguageCode
+  language: Language
   eventCategory?: string
-  image?: EventImage | null
+  image?: RawEventImage | null
 }
 
 export type QuoteQuery = {
@@ -39,14 +43,14 @@ export type QuoteQuery = {
   count?: number
 }
 
-const datasets: Record<LanguageCode, RawEvent[]> = {
+const datasets: Record<Language, RawEvent[]> = {
   tr: eventsTr as RawEvent[],
   en: eventsEn as RawEvent[],
   de: eventsDe as RawEvent[],
   es: eventsEs as RawEvent[],
 }
 
-const quoteCache: Record<LanguageCode, QuoteRecord[]> = {
+const quoteCache: Record<Language, QuoteRecord[]> = {
   tr: buildQuoteDataset('tr'),
   en: buildQuoteDataset('en'),
   de: buildQuoteDataset('de'),
@@ -59,7 +63,7 @@ export const DEFAULT_BASE_URL =
 
 type FlexibleQuote = string | { text?: string; '-text'?: string; source?: string }
 
-function buildQuoteDataset(language: LanguageCode): QuoteRecord[] {
+function buildQuoteDataset(language: Language): QuoteRecord[] {
   const dataset = datasets[language] ?? datasets.tr
 
   return dataset.flatMap((event) => {
@@ -87,7 +91,7 @@ function buildQuoteDataset(language: LanguageCode): QuoteRecord[] {
   })
 }
 
-export const getQuotes = (language: LanguageCode): QuoteRecord[] => {
+export const getQuotes = (language: Language): QuoteRecord[] => {
   return quoteCache[language] || quoteCache.tr
 }
 
@@ -109,7 +113,7 @@ const pickRandomSubset = (source: QuoteRecord[], count: number) => {
   return output
 }
 
-export const resolveQuotes = (language: LanguageCode, query: QuoteQuery = {}) => {
+export const resolveQuotes = (language: Language, query: QuoteQuery = {}) => {
   const dataset = getQuotes(language)
   const { quoteId, eventId, date, random } = query
 
@@ -136,7 +140,7 @@ export const resolveQuotes = (language: LanguageCode, query: QuoteQuery = {}) =>
   return filtered.slice(0, count)
 }
 
-export const buildPermalink = (eventId: number, language: LanguageCode, baseUrl = DEFAULT_BASE_URL) => {
+export const buildPermalink = (eventId: number, language: Language, baseUrl = DEFAULT_BASE_URL) => {
   const url = new URL(baseUrl)
   url.pathname = '/'
   url.searchParams.set('id', eventId.toString())
@@ -153,13 +157,13 @@ export type PublicQuote = {
   eventDescription?: string
   date: string
   category?: string
-  image?: EventImage | null
+  image?: RawEventImage | null
   permalink: string
 }
 
 export const mapToPublicQuote = (
   quote: QuoteRecord,
-  language: LanguageCode,
+  language: Language,
   baseUrl = DEFAULT_BASE_URL
 ): PublicQuote => ({
   id: quote.id,

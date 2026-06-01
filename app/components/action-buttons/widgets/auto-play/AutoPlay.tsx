@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import autoPlayIcon from '@/app/assets/icons/auto-play.svg'
 import Timer from '@/app/components/action-buttons/widgets/auto-play/widgets/timer/Timer'
 import { useEventsData } from '@/app/helpers/data'
@@ -12,7 +12,6 @@ import { useLanguageStore } from '@/app/stores/languageStore'
 
 export default function AutoPlay() {
   const searchParams = useSearchParams()
-  const router = useRouter()
   const events = useEventsData()
   const { t } = useLanguageStore()
 
@@ -134,7 +133,7 @@ export default function AutoPlay() {
 
       const url = new URL(window.location.href)
       url.searchParams.delete('auto-play')
-      router.replace(url.toString(), { scroll: false })
+      window.history.pushState({}, '', url.toString())
 
       if (document.fullscreenElement) {
         try {
@@ -148,7 +147,7 @@ export default function AutoPlay() {
         scrollToStart()
       }
     },
-    [scrollToStart, router],
+    [scrollToStart],
   )
 
   const startAutoPlay = useCallback(async () => {
@@ -156,7 +155,7 @@ export default function AutoPlay() {
 
     const url = new URL(window.location.href)
     url.searchParams.set('auto-play', 'true')
-    router.replace(url.toString(), { scroll: false })
+    window.history.pushState({}, '', url.toString())
 
     if (!document.fullscreenElement) {
       try {
@@ -165,7 +164,7 @@ export default function AutoPlay() {
         console.log('Fullscreen error:', error)
       }
     }
-  }, [router])
+  }, [])
 
   const handleAutoPlayToggle = useCallback(async () => {
     if (isActive) {
@@ -181,7 +180,7 @@ export default function AutoPlay() {
     const nextIndex = (effectiveCurrentIndex + 1) % events.length
 
     if (nextIndex === 0) {
-      router.replace('/', { scroll: false })
+      window.history.pushState({}, '', '/')
       setTimeout(() => scrollToStart(), 100)
       return
     }
@@ -189,8 +188,8 @@ export default function AutoPlay() {
     const nextEventId = events[nextIndex].id
     const url = new URL(window.location.href)
     url.searchParams.set('id', nextEventId.toString())
-    router.replace(url.toString(), { scroll: false })
-  }, [currentId, events, scrollToStart, router])
+    window.history.pushState({}, '', url.toString())
+  }, [currentId, events, scrollToStart])
 
   const handleTimerComplete = useCallback(() => {
     goToNextEvent()

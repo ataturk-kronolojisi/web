@@ -1,6 +1,6 @@
 'use client'
 import { ReactNode, useCallback, useState } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useEventsData } from '@/app/helpers/data'
 
 type SwipeWrapperProps = {
@@ -16,7 +16,6 @@ export default function SwipeWrapper({
 }: SwipeWrapperProps) {
   const events = useEventsData()
   const searchParams = useSearchParams()
-  const router = useRouter()
 
   const [touchStartX, setTouchStartX] = useState<number | null>(null)
   const [touchEndX, setTouchEndX] = useState<number | null>(null)
@@ -36,8 +35,8 @@ export default function SwipeWrapper({
     const currentIndex = events.findIndex((item) => item.id === Number(currentId))
     const prevIndex = (currentIndex - 1 + events.length) % events.length
     url.searchParams.set('id', events[prevIndex].id.toString())
-    router.replace(url.toString(), { scroll: false })
-  }, [searchParams, events, router])
+    window.history.pushState({}, '', url.toString())
+  }, [searchParams, events])
 
   const onGoNext = useCallback(() => {
     const url = new URL(window.location.href)
@@ -45,8 +44,8 @@ export default function SwipeWrapper({
     const currentIndex = events.findIndex((item) => item.id === Number(currentId))
     const nextIndex = (currentIndex + 1) % events.length
     url.searchParams.set('id', events[nextIndex].id.toString())
-    router.replace(url.toString(), { scroll: false })
-  }, [searchParams, events, router])
+    window.history.pushState({}, '', url.toString())
+  }, [searchParams, events])
 
   const handleTouchEnd = () => {
     if (!touchStartX || !touchEndX) return
