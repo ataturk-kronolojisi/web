@@ -12,7 +12,7 @@ describe('LanguageSelector', () => {
 
     fireEvent.click(screen.getByTitle('Dil Sec'))
 
-    expect(screen.getByRole('button', { name: 'Turkce' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Türkçe' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'English' })).toBeInTheDocument()
   })
 
