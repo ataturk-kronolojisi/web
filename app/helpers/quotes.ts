@@ -1,28 +1,13 @@
-import eventsTr from '@/app/json/events_tr.json'
-import eventsEn from '@/app/json/events_en.json'
-import eventsDe from '@/app/json/events_de.json'
-import eventsEs from '@/app/json/events_es.json'
-import eventsSv from '@/app/json/events_sv.json'
+import {
+  getEventsData,
+  normalizeLanguageCode,
+  SUPPORTED_LANGUAGE_CODES,
+  type LanguageCode,
+  type RawEventImage,
+  type RawQuote,
+} from '../lib/languages'
 
-import { QuoteType } from '../components/content/Content'
-
-export type Language = 'tr' | 'en' | 'de' | 'es' | 'sv'
-
-type RawEventImage = {
-  url: string
-  alt: string
-  source?: string
-}
-
-type RawEvent = {
-  id: number
-  date: string
-  title: string
-  description?: string
-  quotes?: QuoteType[]
-  images?: RawEventImage[]
-  category?: string
-}
+export type Language = LanguageCode
 
 export type QuoteRecord = {
   id: string
@@ -45,30 +30,14 @@ export type QuoteQuery = {
   count?: number
 }
 
-const datasets: Record<Language, RawEvent[]> = {
-  tr: eventsTr as RawEvent[],
-  en: eventsEn as RawEvent[],
-  de: eventsDe as RawEvent[],
-  es: eventsEs as RawEvent[],
-  sv: eventsSv as RawEvent[],
-}
-
-const quoteCache: Record<Language, QuoteRecord[]> = {
-  tr: buildQuoteDataset('tr'),
-  en: buildQuoteDataset('en'),
-  de: buildQuoteDataset('de'),
-  es: buildQuoteDataset('es'),
-  sv: buildQuoteDataset('sv'),
-}
-
 export const MAX_QUOTES_PER_REQUEST = 10
 export const DEFAULT_BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL || 'https://ataturk-kronolojisi.org'
 
-type FlexibleQuote = string | { text?: string; '-text'?: string; source?: string }
+type FlexibleQuote = RawQuote
 
 function buildQuoteDataset(language: Language): QuoteRecord[] {
-  const dataset = datasets[language] ?? datasets.tr
+  const dataset = getEventsData(language)
 
   return dataset.flatMap((event) => {
     const rawQuotes = event.quotes ?? []
@@ -95,8 +64,13 @@ function buildQuoteDataset(language: Language): QuoteRecord[] {
   })
 }
 
+const quoteCache = Object.fromEntries(
+  SUPPORTED_LANGUAGE_CODES.map((language) => [language, buildQuoteDataset(language)]),
+) as Record<Language, QuoteRecord[]>
+
 export const getQuotes = (language: Language): QuoteRecord[] => {
-  return quoteCache[language] || quoteCache.tr
+  const normalizedLanguage = normalizeLanguageCode(language)
+  return quoteCache[normalizedLanguage] || quoteCache.tr
 }
 
 const clampCount = (count?: number | null) => {

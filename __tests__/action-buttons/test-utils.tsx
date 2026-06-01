@@ -2,6 +2,7 @@ import React from 'react'
 import { afterEach, vi } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
+import { availableLanguages } from '@/app/lib/languages'
 
 export type MockEvent = {
   id: number
@@ -154,12 +155,7 @@ vi.mock('@/app/helpers/date', () => ({
 }))
 
 vi.mock('@/app/stores/languageStore', () => ({
-  availableLanguages: [
-    { code: 'tr', name: 'Turkce' },
-    { code: 'en', name: 'English' },
-    { code: 'de', name: 'Deutsch' },
-    { code: 'es', name: 'Espanol' },
-  ],
+  availableLanguages,
   useLanguageStore: () => ({
     currentLanguageCode,
     t: translations,

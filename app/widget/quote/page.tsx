@@ -52,6 +52,12 @@ const UI_COPY: Record<
     signature: 'Mustafa Kemal Atatürk',
     empty: 'No se encontró ninguna cita para mostrar.',
   },
+  sv: {
+    cta: 'Läs i kronologin',
+    widgetLabel: 'Atatürks citat',
+    signature: 'Mustafa Kemal Atatürk',
+    empty: 'Inget citat att visa hittades.',
+  },
 }
 
 const getSingleParam = (val: string | string[] | undefined): string | undefined =>

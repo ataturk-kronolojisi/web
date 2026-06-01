@@ -7,8 +7,9 @@ import {
   MAX_QUOTES_PER_REQUEST,
   type Language,
 } from '../app/helpers/quotes'
+import { SUPPORTED_LANGUAGE_CODES } from '../app/lib/languages'
 
-const LANGUAGES: Language[] = ['tr', 'en', 'de', 'es']
+const LANGUAGES: Language[] = [...SUPPORTED_LANGUAGE_CODES]
 
 describe('Quote sistemi', () => {
   describe('getQuotes', () => {
@@ -34,6 +35,15 @@ describe('Quote sistemi', () => {
       const quotes = getQuotes('xx' as Language)
       const trQuotes = getQuotes('tr')
       expect(quotes).toEqual(trQuotes)
+    })
+
+    it('[sv] dataset ve çözümleme İsveççe kalmalı', () => {
+      const quotes = getQuotes('sv')
+      const resolved = resolveQuotes('sv', { random: false, count: 1 })
+
+      expect(quotes.length).toBeGreaterThan(0)
+      expect(quotes[0].language).toBe('sv')
+      expect(resolved[0].language).toBe('sv')
     })
   })
 

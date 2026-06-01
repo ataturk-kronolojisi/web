@@ -1,15 +1,9 @@
 import { useLanguageStore } from '../stores/languageStore'
-
-const localeMap: Record<string, string> = {
-  tr: 'tr-TR',
-  en: 'en-US',
-  de: 'de-DE',
-  es: 'es-ES',
-}
+import { getLocaleForLanguage } from '../lib/languages'
 
 export function formatDate(date: string): string {
   const currentLanguageCode = useLanguageStore.getState().currentLanguageCode
-  const locale = localeMap[currentLanguageCode] || 'tr-TR'
+  const locale = getLocaleForLanguage(currentLanguageCode)
 
   if (date.length === 17) {
     // ay ve yıl

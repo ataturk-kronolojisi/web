@@ -2,54 +2,16 @@
 
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import tr from '../locale/tr.json'
-import en from '../locale/en.json'
-import de from '../locale/de.json'
-import es from '../locale/es.json'
-import sv from '../locale/sv.json'
+import {
+  DEFAULT_LANGUAGE_CODE,
+  availableLanguages as sharedAvailableLanguages,
+  getLanguageFile,
+  normalizeLanguageCode,
+  type LanguageCode,
+  type LocaleData,
+} from '../lib/languages'
 
-type LocaleData = typeof tr
-
-interface Language {
-  code: string
-  name: string
-  file: LocaleData
-}
-
-// Desteklenen diller
-export const availableLanguages: Language[] = [
-  {
-    code: 'tr',
-    name: 'Türkçe',
-    file: tr,
-  },
-  {
-    code: 'en',
-    name: 'English',
-    file: en,
-  },
-  {
-    code: 'de',
-    name: 'Deutsch',
-    file: de,
-  },
-  {
-    code: 'es',
-    name: 'Español',
-    file: es,
-  },
-  {
-    code: 'sv',
-    name: 'Svenska',
-    file: sv,
-  },
-]
-
-// Dil dosyasını çağırma fonksiyonu
-const getLanguageFile = (code: string) => {
-  const language = availableLanguages.find((lang) => lang.code === code)
-  return language ? language.file : tr
-}
+export const availableLanguages = sharedAvailableLanguages
 
 // Tarayıcı dilini getiren fonksiyon
 const getBrowserLanguage = (): string => {
@@ -60,17 +22,15 @@ const getBrowserLanguage = (): string => {
   const langCode = browserLang.split('-')[0].toLowerCase()
 
   // Desteklenen diller arasında yoksa tr kullanılsın
-  const isSupported = availableLanguages.some((lang) => lang.code === langCode)
+  const isSupported = sharedAvailableLanguages.some((lang) => lang.code === langCode)
   return isSupported ? langCode : 'tr'
 }
 
 interface LanguageStore {
-  currentLanguageCode: string
+  currentLanguageCode: LanguageCode
   t: LocaleData
   setLanguage: (code: string) => void
 }
-
-const DEFAULT_LANGUAGE_CODE = 'tr'
 
 export const useLanguageStore = create<LanguageStore>()(
   persist(
@@ -79,13 +39,11 @@ export const useLanguageStore = create<LanguageStore>()(
       t: getLanguageFile(DEFAULT_LANGUAGE_CODE),
 
       setLanguage: (code: string) => {
-        const language = availableLanguages.find((lang) => lang.code === code)
-        if (language) {
-          set({
-            currentLanguageCode: code,
-            t: language.file,
-          })
-        }
+        const nextLanguageCode = normalizeLanguageCode(code)
+        set({
+          currentLanguageCode: nextLanguageCode,
+          t: getLanguageFile(nextLanguageCode),
+        })
       },
     }),
     {

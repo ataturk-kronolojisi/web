@@ -1,11 +1,7 @@
 import { useMemo, useEffect } from 'react'
-import jsonDataTr from '../json/events_tr.json'
-import jsonDataEn from '../json/events_en.json'
-import jsonDataDe from '../json/events_de.json'
-import jsonDataEs from '../json/events_es.json'
-import jsonDataSv from '../json/events_sv.json'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { useLanguageStore } from '../stores/languageStore'
+import { getEventsData, normalizeLanguageCode } from '../lib/languages'
 export const useEventsData = () => {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -29,23 +25,9 @@ export const useEventsData = () => {
   }, [urlLanguage, currentLanguageCode, setLanguage, router, pathname, searchParams])
 
   // Aktif dili belirle: URL > store (localStorage veya tarayıcı dili)
-  const activeLanguage = urlLanguage || currentLanguageCode
+  const activeLanguage = normalizeLanguageCode(urlLanguage || currentLanguageCode)
 
   return useMemo(() => {
-    // Dil "tr" ise events_tr.json, "en" ise events_en.json, hiçbiri değilse events_tr.json
-    switch (activeLanguage) {
-      case 'tr':
-        return jsonDataTr
-      case 'en':
-        return jsonDataEn
-      case 'de':
-        return jsonDataDe
-      case 'es':
-        return jsonDataEs
-      case 'sv':
-        return jsonDataSv
-      default:
-        return jsonDataTr
-    }
+    return getEventsData(activeLanguage)
   }, [activeLanguage])
 }

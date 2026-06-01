@@ -84,6 +84,15 @@ describe('/api/quotes', () => {
       expect(meta.language).toBe('en')
     })
 
+    it('language=sv kabul edilmeli', async () => {
+      const expectedQuote = getQuotes('sv')[0]
+      const res = await GET(makeRequest({ language: 'sv', random: 'false', count: '1' }))
+      const body = await res.json()
+      expect(body.meta.language).toBe('sv')
+      expect(body.quotes[0].text).toBe(expectedQuote.quote)
+      expect(body.quotes[0].permalink).toContain('language=sv')
+    })
+
     it('bilinmeyen dil için Türkçeye fallback yapmalı', async () => {
       const res = await GET(makeRequest({ language: 'jp' }))
       const { meta } = await res.json()

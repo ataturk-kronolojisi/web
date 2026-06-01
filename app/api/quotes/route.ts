@@ -6,6 +6,7 @@ import {
   MAX_QUOTES_PER_REQUEST,
   QuoteQuery,
 } from '@/app/helpers/quotes'
+import { normalizeLanguageCode } from '@/app/lib/languages'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -35,7 +36,7 @@ export function OPTIONS() {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const languageParam = searchParams.get('language')
-  const language = languageParam === 'en' ? 'en' : 'tr'
+  const language = normalizeLanguageCode(languageParam)
   const query: QuoteQuery = {
     quoteId: searchParams.get('quoteId'),
     eventId: parseNumber(searchParams.get('eventId')),
@@ -63,6 +64,6 @@ export async function GET(req: NextRequest) {
         ...corsHeaders,
         ...cacheHeaders,
       },
-    }
+    },
   )
 }

@@ -2,11 +2,16 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useLanguageStore } from '@/app/stores/languageStore'
+import {
+  SUPPORTED_LANGUAGE_CODES,
+  normalizeLanguageCode,
+  type LanguageCode,
+} from '@/app/lib/languages'
 import styles from './QuoteWidgetShowcase.module.css'
 
 const FALLBACK_LANGUAGE = 'tr'
 const FALLBACK_THEME = 'light'
-const LANGUAGE_OPTIONS = ['tr', 'en', 'de', 'es'] as const
+const LANGUAGE_OPTIONS = SUPPORTED_LANGUAGE_CODES
 const THEME_OPTIONS = ['light', 'dark'] as const
 type ThemeOption = (typeof THEME_OPTIONS)[number]
 const THEME_PRESETS = {
@@ -24,13 +29,13 @@ export default function QuoteWidgetShowcase() {
   const { t, currentLanguageCode } = useLanguageStore()
   const [isEmbedVisible, setIsEmbedVisible] = useState(false)
   const [copied, setCopied] = useState(false)
-  const [selectedLanguage, setSelectedLanguage] = useState(FALLBACK_LANGUAGE)
+  const [selectedLanguage, setSelectedLanguage] = useState<LanguageCode>(FALLBACK_LANGUAGE)
   const [selectedTheme, setSelectedTheme] = useState<ThemeOption>(FALLBACK_THEME)
   const [selectedBackgroundColor, setSelectedBackgroundColor] = useState<string>(
-    THEME_PRESETS[FALLBACK_THEME].backgroundColor
+    THEME_PRESETS[FALLBACK_THEME].backgroundColor,
   )
   const [selectedTextColor, setSelectedTextColor] = useState<string>(
-    THEME_PRESETS[FALLBACK_THEME].textColor
+    THEME_PRESETS[FALLBACK_THEME].textColor,
   )
 
   const language = currentLanguageCode || FALLBACK_LANGUAGE
@@ -76,44 +81,41 @@ export default function QuoteWidgetShowcase() {
     selectedTheme,
   ])
 
-  const embedCode = useMemo(
-    () => {
-      const divAttributes = [
-        'data-ataturk-quote-widget',
-        `data-language="${selectedLanguage}"`,
-        `data-theme="${selectedTheme}"`,
-      ]
-      const scriptAttributes = [
-        'async',
-        'src="https://ataturk-kronolojisi.org/widget/quote.js"',
-        `data-language="${selectedLanguage}"`,
-        `data-theme="${selectedTheme}"`,
-      ]
-
-      if (hasCustomBackgroundColor) {
-        const attribute = `data-background-color="${selectedBackgroundColor}"`
-        divAttributes.push(attribute)
-        scriptAttributes.push(attribute)
-      }
-
-      if (hasCustomTextColor) {
-        const attribute = `data-text-color="${selectedTextColor}"`
-        divAttributes.push(attribute)
-        scriptAttributes.push(attribute)
-      }
-
-      return `<div ${divAttributes.join(' ')}></div>
-<script ${scriptAttributes.join(' ')}></script>`
-    },
-    [
-      hasCustomBackgroundColor,
-      hasCustomTextColor,
-      selectedBackgroundColor,
-      selectedLanguage,
-      selectedTextColor,
-      selectedTheme,
+  const embedCode = useMemo(() => {
+    const divAttributes = [
+      'data-ataturk-quote-widget',
+      `data-language="${selectedLanguage}"`,
+      `data-theme="${selectedTheme}"`,
     ]
-  )
+    const scriptAttributes = [
+      'async',
+      'src="https://ataturk-kronolojisi.org/widget/quote.js"',
+      `data-language="${selectedLanguage}"`,
+      `data-theme="${selectedTheme}"`,
+    ]
+
+    if (hasCustomBackgroundColor) {
+      const attribute = `data-background-color="${selectedBackgroundColor}"`
+      divAttributes.push(attribute)
+      scriptAttributes.push(attribute)
+    }
+
+    if (hasCustomTextColor) {
+      const attribute = `data-text-color="${selectedTextColor}"`
+      divAttributes.push(attribute)
+      scriptAttributes.push(attribute)
+    }
+
+    return `<div ${divAttributes.join(' ')}></div>
+<script ${scriptAttributes.join(' ')}></script>`
+  }, [
+    hasCustomBackgroundColor,
+    hasCustomTextColor,
+    selectedBackgroundColor,
+    selectedLanguage,
+    selectedTextColor,
+    selectedTheme,
+  ])
 
   const toggleEmbed = () => {
     setIsEmbedVisible((prev) => !prev)
@@ -187,7 +189,9 @@ export default function QuoteWidgetShowcase() {
                   <select
                     className={styles.select}
                     value={selectedLanguage}
-                    onChange={(event) => setSelectedLanguage(event.target.value)}
+                    onChange={(event) =>
+                      setSelectedLanguage(normalizeLanguageCode(event.target.value))
+                    }
                   >
                     {LANGUAGE_OPTIONS.map((option) => (
                       <option key={option} value={option}>
@@ -217,7 +221,9 @@ export default function QuoteWidgetShowcase() {
                       type='color'
                       className={styles.colorInput}
                       value={selectedBackgroundColor}
-                      onChange={(event) => setSelectedBackgroundColor(event.target.value.toUpperCase())}
+                      onChange={(event) =>
+                        setSelectedBackgroundColor(event.target.value.toUpperCase())
+                      }
                     />
                     <span className={styles.colorValue}>{selectedBackgroundColor}</span>
                   </span>

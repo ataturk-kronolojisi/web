@@ -2,11 +2,21 @@ import { describe, it, expect } from 'vitest'
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
+import { SUPPORTED_LANGUAGE_CODES } from '../app/lib/languages'
 
-const LANGUAGES = ['tr', 'en', 'de', 'es'] as const
+const LANGUAGES = SUPPORTED_LANGUAGE_CODES
 const DATA_DIR = path.join(process.cwd(), 'data/events')
 const REQUIRED_FIELDS = ['id', 'title', 'date', 'category', 'location']
-const VALID_CATEGORIES = ['personal', 'military', 'political', 'education', 'diplomatic', 'reform', 'visit', 'other']
+const VALID_CATEGORIES = [
+  'personal',
+  'military',
+  'political',
+  'education',
+  'diplomatic',
+  'reform',
+  'visit',
+  'other',
+]
 
 function loadEvents(lang: string) {
   const dir = path.join(DATA_DIR, lang)
@@ -121,18 +131,19 @@ describe('Veri bütünlüğü — Markdown dosyaları', () => {
 })
 
 describe('Diller arası tutarlılık', () => {
-  const allEvents = Object.fromEntries(
-    LANGUAGES.map((lang) => [lang, loadEvents(lang)])
-  )
+  const allEvents = Object.fromEntries(LANGUAGES.map((lang) => [lang, loadEvents(lang)]))
 
   it('tüm dillerde aynı sayıda olay olmalı', () => {
     const counts = LANGUAGES.map((lang) => allEvents[lang].length)
-    expect(new Set(counts).size, `Olay sayıları: ${LANGUAGES.map((l, i) => `${l}=${counts[i]}`).join(', ')}`).toBe(1)
+    expect(
+      new Set(counts).size,
+      `Olay sayıları: ${LANGUAGES.map((l, i) => `${l}=${counts[i]}`).join(', ')}`,
+    ).toBe(1)
   })
 
   it('tüm dillerde aynı id seti olmalı', () => {
     const trIds = new Set(allEvents.tr.map((e) => e.data.id))
-    for (const lang of ['en', 'de', 'es'] as const) {
+    for (const lang of ['en', 'de', 'es', 'sv'] as const) {
       const langIds = new Set(allEvents[lang].map((e) => e.data.id))
       const missingInLang = [...trIds].filter((id) => !langIds.has(id))
       const extraInLang = [...langIds].filter((id) => !trIds.has(id))
@@ -144,7 +155,7 @@ describe('Diller arası tutarlılık', () => {
   it('tüm dillerde aynı tarihler olmalı', () => {
     const trDates = new Map(allEvents.tr.map((e) => [e.data.id, e.data.date]))
     const mismatches: string[] = []
-    for (const lang of ['en', 'de', 'es'] as const) {
+    for (const lang of ['en', 'de', 'es', 'sv'] as const) {
       for (const event of allEvents[lang]) {
         const trDate = trDates.get(event.data.id)
         if (trDate && trDate !== event.data.date) {
@@ -156,9 +167,7 @@ describe('Diller arası tutarlılık', () => {
   })
 
   it('tüm dillerde aynı koordinatlar olmalı', () => {
-    const trLocs = new Map(
-      allEvents.tr.map((e) => [e.data.id, e.data.location])
-    )
+    const trLocs = new Map(allEvents.tr.map((e) => [e.data.id, e.data.location]))
     const mismatches: string[] = []
     for (const lang of ['en', 'de', 'es'] as const) {
       for (const event of allEvents[lang]) {

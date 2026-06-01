@@ -7,7 +7,10 @@
 
   const currentScript = document.currentScript
 
-  const defaultLanguage = currentScript?.getAttribute('data-language') || 'tr'
+  const defaultLanguage =
+    currentScript?.getAttribute('data-language') ||
+    document.documentElement?.lang?.split('-')[0]?.toLowerCase() ||
+    'tr'
 
   const defaultTheme = currentScript?.getAttribute('data-theme') || 'light'
 
@@ -56,8 +59,7 @@
 
     const hideSignature = element.getAttribute('data-hide-signature')
 
-    const backgroundColor =
-      element.getAttribute('data-background-color') || defaultBackgroundColor
+    const backgroundColor = element.getAttribute('data-background-color') || defaultBackgroundColor
 
     const textColor = element.getAttribute('data-text-color') || defaultTextColor
 

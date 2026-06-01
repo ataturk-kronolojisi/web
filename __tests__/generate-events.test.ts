@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'fs'
 import path from 'path'
+import { SUPPORTED_LANGUAGE_CODES } from '../app/lib/languages'
 
 const JSON_DIR = path.join(process.cwd(), 'app/json')
-const LANGUAGES = ['tr', 'en', 'de', 'es']
+const LANGUAGES = SUPPORTED_LANGUAGE_CODES
 
 describe('Derlenmiş JSON dosyaları', () => {
   for (const lang of LANGUAGES) {
@@ -11,7 +12,10 @@ describe('Derlenmiş JSON dosyaları', () => {
       const filePath = path.join(JSON_DIR, `events_${lang}.json`)
 
       it('dosya mevcut olmalı', () => {
-        expect(fs.existsSync(filePath), `events_${lang}.json bulunamadı — "npm run build" çalıştırıldı mı?`).toBe(true)
+        expect(
+          fs.existsSync(filePath),
+          `events_${lang}.json bulunamadı — "npm run build" çalıştırıldı mı?`,
+        ).toBe(true)
       })
 
       it('geçerli JSON array olmalı', () => {
@@ -29,7 +33,9 @@ describe('Derlenmiş JSON dosyaları', () => {
 
       it('her event objesinde id ve title olmalı', () => {
         const content = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-        const invalid = content.filter((e: { id?: number; title?: string }) => e.id === undefined || e.id === null)
+        const invalid = content.filter(
+          (e: { id?: number; title?: string }) => e.id === undefined || e.id === null,
+        )
         expect(invalid.length, `${invalid.length} event'te id eksik`).toBe(0)
       })
     })
