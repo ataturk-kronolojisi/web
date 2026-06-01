@@ -3,6 +3,7 @@ import jsonDataTr from '../json/events_tr.json'
 import jsonDataEn from '../json/events_en.json'
 import jsonDataDe from '../json/events_de.json'
 import jsonDataEs from '../json/events_es.json'
+import jsonDataSv from '../json/events_sv.json'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { useLanguageStore } from '../stores/languageStore'
 export const useEventsData = () => {
@@ -41,6 +42,8 @@ export const useEventsData = () => {
         return jsonDataDe
       case 'es':
         return jsonDataEs
+      case 'sv':
+        return jsonDataSv
       default:
         return jsonDataTr
     }

@@ -2,9 +2,11 @@ import eventsTr from '@/app/json/events_tr.json'
 import eventsEn from '@/app/json/events_en.json'
 import eventsDe from '@/app/json/events_de.json'
 import eventsEs from '@/app/json/events_es.json'
+import eventsSv from '@/app/json/events_sv.json'
+
 import { QuoteType } from '../components/content/Content'
 
-export type Language = 'tr' | 'en' | 'de' | 'es'
+export type Language = 'tr' | 'en' | 'de' | 'es' | 'sv'
 
 type RawEventImage = {
   url: string
@@ -48,6 +50,7 @@ const datasets: Record<Language, RawEvent[]> = {
   en: eventsEn as RawEvent[],
   de: eventsDe as RawEvent[],
   es: eventsEs as RawEvent[],
+  sv: eventsSv as RawEvent[],
 }
 
 const quoteCache: Record<Language, QuoteRecord[]> = {
@@ -55,6 +58,7 @@ const quoteCache: Record<Language, QuoteRecord[]> = {
   en: buildQuoteDataset('en'),
   de: buildQuoteDataset('de'),
   es: buildQuoteDataset('es'),
+  sv: buildQuoteDataset('sv'),
 }
 
 export const MAX_QUOTES_PER_REQUEST = 10
@@ -74,7 +78,7 @@ function buildQuoteDataset(language: Language): QuoteRecord[] {
       const isString = typeof quote === 'string'
       const quoteText = isString ? quote : (quote?.text ?? quote?.['-text'] ?? '')
       const quoteSource = isString ? undefined : quote?.source
-      
+
       return {
         id: `${event.id}-${index}`,
         eventId: event.id,
@@ -164,7 +168,7 @@ export type PublicQuote = {
 export const mapToPublicQuote = (
   quote: QuoteRecord,
   language: Language,
-  baseUrl = DEFAULT_BASE_URL
+  baseUrl = DEFAULT_BASE_URL,
 ): PublicQuote => ({
   id: quote.id,
   text: quote.quote,

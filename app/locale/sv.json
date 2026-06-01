@@ -1,0 +1,125 @@
+{
+  "Header": {
+    "title": "En kronologisk historia om Atatürk"
+  },
+  "About": {
+    "title": "Till Turkiets barn och ungdom!",
+    "description": "Den store ledaren Gazi Mustafa Kemal Atatürk ledde det turkiska folkets kamp för självständighet och blev grundaren av Republiken Turkiet.",
+    "mission": "Syftet med detta projekt är att kronologiskt berätta Atatürks liv, fyllt med mod, vision och självuppoffring, och att inspirera unga människor.",
+    "usageTitle": "Användning",
+    "usageDescription": "Syftet med detta projekt är att kronologiskt berätta Atatürks liv, fyllt med mod, vision och självuppoffring, och att inspirera unga människor.",
+    "translatorsTitle": "Översättare",
+    "socialMediaManagersTitle": "Sociala medier hantering",
+    "socialMediaLinksTitle": "Sociala medielänkar",
+    "Contributors": {
+      "title": "Utvecklare",
+      "intro": "Källkoden och data för projektet är öppna för alla. Du kan se koden på",
+      "linkText": "GitHub"
+    },
+    "Story": {
+      "title": "Vår resa",
+      "iframeTitle": "Inbäddat inlägg"
+    },
+    "Widget": {
+      "sectionLabel": "Ataturk citat widget showcase",
+      "eyebrow": "Widget",
+      "title": "Atatürk Citat Widget",
+      "description": "Bädda in vår lättviktiga iframe-komponent för att visa inspirerande Atatürk-citat på din egen webbplats.",
+      "previewFrameTitle": "Förhandsvisning av Atatürk-citatwidgeten",
+      "cta": "Lägg till citatwidgeten på din webbplats",
+      "closeCta": "Dölj inbäddningskod",
+      "embedTitle": "Klistra in detta utdrag på din webbplats",
+      "embedDescription": "Placera container-div och script-taggen var du vill att widgeten ska visas.",
+      "languageLabel": "Widgetspråk",
+      "themeLabel": "Tema",
+      "backgroundColorLabel": "Bakgrundsfärg",
+      "textColorLabel": "Textfärg",
+      "languages": {
+        "tr": "Turkiska",
+        "en": "Engelska",
+        "de": "Tyska",
+        "es": "Spanska"
+      },
+      "themes": {
+        "light": "Ljus",
+        "dark": "Mörk"
+      },
+      "copy": "Kopiera utdrag",
+      "copied": "Kopierat!"
+    }
+  },
+  "Share": {
+    "title": "Dela detta evenemang"
+  },
+  "correctOrder": {
+    "title": "Arrangera de givna händelserna i kronologisk ordning",
+    "confirmationTitle": "Bekräfta ordning",
+    "dropHere": "Släpp här eller välj",
+    "selectPlaceholder": "Välj en händelse",
+    "pleaseFill": "Vänligen fyll i alla fält.",
+    "wrongOrder": "Fel ordning. Korrekt kort har låsts. Försök med andra.",
+    "congratulations": "Grattis! Du arrangerade korrekt. Poäng: {{score}}",
+    "eventsTitle": "Händelser",
+    "orderTitle": "Ordning",
+    "attemptsLabel": "Försök: {{count}}",
+    "winTitle": "🎉 Grattis!",
+    "attemptsText": "Slutfört framgångsrikt på {{count}} försök.",
+    "scoreText": "Poäng:",
+    "totalScoreText": "Totalpoäng",
+    "historyTitle": "Orderhistorik",
+    "shareText": "Atatürk Event Ordering Game: Jag klarade det på {{attempts}} försök! Poäng: {{score}} poäng. #AtaturkGame",
+    "shareTwitter": "Dela på X",
+    "shareFacebook": "Dela på Facebook",
+    "shareLinkedin": "Dela på LinkedIn",
+    "newGame": "Starta nytt spel",
+    "duplicateError": "Samma händelse kan inte väljas mer än en gång."
+  },
+  "Content": {
+    "ageText": "år gammal"
+  },
+  "ActionButtons": {
+    "streetViewTitle": "Street View",
+    "streetViewIconAlt": "Street View ikon",
+    "eventFilterOpen": "Öppna filter",
+    "eventFilterClose": "Stäng filter",
+    "directionTitle": "Riktning",
+    "directionIconAlt": "Riktning ikon",
+    "searchTitle": "Sök",
+    "searchIconAlt": "Sök ikon",
+    "searchPlaceholder": "Sök...",
+    "shareTitle": "Dela detta evenemang",
+    "shareIconAlt": "Dela ikon",
+    "shareLinkedinTitle": "Dela på LinkedIn",
+    "shareLinkedinIconAlt": "LinkedIn ikon",
+    "shareTwitterTitle": "Dela på Twitter",
+    "shareTwitterIconAlt": "Twitter ikon",
+    "shareFacebookTitle": "Dela på Facebook",
+    "shareFacebookIconAlt": "Facebook ikon",
+    "shareWhatsappTitle": "Dela på WhatsApp",
+    "shareWhatsappIconAlt": "WhatsApp ikon",
+    "shareText": "En kronologisk historia om Atatürk - Upptäck livet för Mustafa Kemal Atatürk genom kartor, visuella och ljudkällor!",
+    "autoPlayActiveTitle": "Automatisk övergång aktiv",
+    "autoPlayActiveStopTitle": "Stoppa (Mellanslag)",
+    "autoPlaySpeedTitle": "Hastighet",
+    "autoPlaySpeedChangeTitle": "Klicka för att ändra",
+    "autoPlayMinutesText": "m",
+    "autoPlaySecondsText": "s",
+    "autoPlayIconAlt": "Automatisk övergång ikon",
+    "languageSelectorTitle": "Välj språk",
+    "languageSelectorIconAlt": "Språk ikon",
+    "filters": {
+      "personal": "Personal",
+      "military": "Militär",
+      "political": "Politisk",
+      "education": "Utbildning",
+      "reform": "Reform",
+      "visit": "Besök",
+      "other": "Annat"
+    },
+    "editThisContent": "Redigera detta innehåll"
+  },
+  "SupportMe": {
+    "description": "Bjud mig på en kaffe"
+  },
+  "InformationSource": "Informationskälla"
+}

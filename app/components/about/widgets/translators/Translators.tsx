@@ -5,6 +5,7 @@ import Image from 'next/image'
 import AEnesSolProfilePicture from '@/app/assets/images/a-enes-sol.jpeg'
 import KaanKarakocProfilePicture from '@/app/assets/images/kaan-karakoc.jpeg'
 import MursideAkiProfilePicture from '@/app/assets/images/murside-aki.jpeg'
+import BerkG from '@/app/assets/images/berk-g.jpeg'
 import Link from 'next/link'
 
 export default function Translators() {
@@ -34,6 +35,13 @@ export default function Translators() {
             <span>Mürşide Aki</span>
           </Link>
           - Español
+        </li>
+        <li>
+          <Link target='_blank' href='https://www.linkedin.com/in/berk-g/'>
+            <Image src={BerkG} alt='Berk G' width={50} height={50} />
+            <span>Berk Güzelışık</span>
+          </Link>
+          - Svenska
         </li>
       </ul>
     </div>

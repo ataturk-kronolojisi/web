@@ -48,7 +48,7 @@ function getEventsForLang(lang) {
   })
 }
 
-const languages = ['tr', 'en', 'de', 'es']
+const languages = ['tr', 'en', 'de', 'es', 'sv']
 
 languages.forEach((lang) => {
   const events = getEventsForLang(lang)

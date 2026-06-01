@@ -6,6 +6,7 @@ import tr from '../locale/tr.json'
 import en from '../locale/en.json'
 import de from '../locale/de.json'
 import es from '../locale/es.json'
+import sv from '../locale/sv.json'
 
 type LocaleData = typeof tr
 
@@ -36,6 +37,11 @@ export const availableLanguages: Language[] = [
     code: 'es',
     name: 'Español',
     file: es,
+  },
+  {
+    code: 'sv',
+    name: 'Svenska',
+    file: sv,
   },
 ]
 
@@ -107,10 +113,7 @@ if (typeof window !== 'undefined') {
     // 1. URL parametresi varsa onu kullan
     if (urlLanguage) {
       useLanguageStore.getState().setLanguage(urlLanguage)
-    }
-    // 2. localStorage varsa onu kullan (zaten Zustand bunu yapıyor, ekstra bir şey yapmaya gerek yok)
-    // 3. İkisi de yoksa tarayıcı dilini kullan
-    else if (!stored) {
+    } else if (!stored) {
       const browserLang = getBrowserLanguage()
       useLanguageStore.getState().setLanguage(browserLang)
     }
