@@ -53,13 +53,8 @@ const HATAY_MASK = turf.polygon([
   ],
 ])
 
-interface Event {
-  id: number
-  date: string
-}
-
 interface GeoJSONProps {
-  events: Event[]
+  events: Array<{ id: number; date: string }>
   searchParams: URLSearchParams
 }
 

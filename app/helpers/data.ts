@@ -1,10 +1,28 @@
-import { useMemo, useEffect } from 'react'
-import jsonDataTr from '../json/events_tr.json'
-import jsonDataEn from '../json/events_en.json'
-import jsonDataDe from '../json/events_de.json'
-import jsonDataEs from '../json/events_es.json'
+import { useEffect, useState } from 'react'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { useLanguageStore } from '../stores/languageStore'
+
+type EventData = {
+  id: number
+  title: string
+  date: string
+  description: string
+  category?: string
+  location?: { lat: number; lon: number }
+  images?: { src: string; alt: string }[]
+  quotes?: { text: string; source?: string }[]
+  sounds?: { src: string; label?: string }[]
+  source?: string
+}
+
+const dataImporters: Record<string, () => Promise<{ default: EventData[] }>> = {
+  tr: () => import('../json/events_tr.json'),
+  en: () => import('../json/events_en.json'),
+  de: () => import('../json/events_de.json'),
+  es: () => import('../json/events_es.json'),
+}
+
+const dataCache: Record<string, EventData[]> = {}
 
 export const useEventsData = () => {
   const searchParams = useSearchParams()
@@ -12,38 +30,57 @@ export const useEventsData = () => {
   const pathname = usePathname()
   const { currentLanguageCode, setLanguage } = useLanguageStore()
 
-  // Öncelik sırası: URL parametresi > localStorage > Tarayıcı dili > tr
   const urlLanguage = searchParams.get('language')
+  const activeLanguage = urlLanguage || currentLanguageCode || 'tr'
+
+  const [data, setData] = useState<EventData[]>(() => dataCache[activeLanguage] || [])
 
   useEffect(() => {
-    // 1. URL parametresi varsa store'u güncelle
     if (urlLanguage && urlLanguage !== currentLanguageCode) {
       setLanguage(urlLanguage)
-    }
-    // 2. URL'de dil parametresi yoksa, mevcut dili URL'e ekle (tr dahil)
-    else if (!urlLanguage && currentLanguageCode) {
+    } else if (!urlLanguage && currentLanguageCode) {
       const params = new URLSearchParams(searchParams.toString())
       params.set('language', currentLanguageCode)
       router.replace(`${pathname}?${params.toString()}`, { scroll: false })
     }
   }, [urlLanguage, currentLanguageCode, setLanguage, router, pathname, searchParams])
 
-  // Aktif dili belirle: URL > store (localStorage veya tarayıcı dili)
-  const activeLanguage = urlLanguage || currentLanguageCode
+  useEffect(() => {
+    let cancelled = false
 
-  return useMemo(() => {
-    // Dil "tr" ise events_tr.json, "en" ise events_en.json, hiçbiri değilse events_tr.json
-    switch (activeLanguage) {
-      case 'tr':
-        return jsonDataTr
-      case 'en':
-        return jsonDataEn
-      case 'de':
-        return jsonDataDe
-      case 'es':
-        return jsonDataEs
-      default:
-        return jsonDataTr
+    const loadData = async () => {
+      if (dataCache[activeLanguage]) {
+        if (!cancelled) {
+          setData(dataCache[activeLanguage])
+        }
+        return
+      }
+
+      try {
+        const importer = dataImporters[activeLanguage] || dataImporters.tr
+        const importedModule = await importer()
+        dataCache[activeLanguage] = importedModule.default
+        if (!cancelled) {
+          setData(importedModule.default)
+        }
+      } catch (error) {
+        console.error(`Failed to load language data for ${activeLanguage}:`, error)
+        if (!dataCache.tr) {
+          const fallbackModule = await dataImporters.tr()
+          dataCache.tr = fallbackModule.default
+        }
+        if (!cancelled) {
+          setData(dataCache.tr)
+        }
+      }
+    }
+
+    loadData()
+
+    return () => {
+      cancelled = true
     }
   }, [activeLanguage])
+
+  return data
 }

@@ -3,7 +3,7 @@
 import { describe, it, expect } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import '../test-utils'
-import { mockSetLanguage } from '../test-utils'
+import { mockSetLanguage, mockRouterReplace } from '../test-utils'
 import LanguageSelector from '@/app/components/action-buttons/widgets/language-selector/LanguageSelector'
 
 describe('LanguageSelector', () => {
@@ -23,6 +23,9 @@ describe('LanguageSelector', () => {
     fireEvent.click(screen.getByRole('button', { name: 'English' }))
 
     expect(mockSetLanguage).toHaveBeenCalledWith('en')
-    expect(window.location.search).toContain('language=en')
+    expect(mockRouterReplace).toHaveBeenCalledWith(
+      expect.stringContaining('language=en'),
+      { scroll: false }
+    )
   })
 })

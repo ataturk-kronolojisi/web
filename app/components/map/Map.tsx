@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { useEventsData } from '@/app/helpers/data'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { formatDate } from '@/app/helpers/date'
 import EventTypes from '@/app/constants/EventTypes'
 import GeoJSONComp from './GeoJSONComp'
@@ -58,6 +58,7 @@ function MapCenterUpdater({ location }: MapProps) {
 
 export default function Map({ location }: MapProps) {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const events = useEventsData()
   const [filteredEvents, setFilteredEvents] = useState<typeof events>([])
   const [isOnline, setIsOnline] = useState(true)
@@ -95,8 +96,8 @@ export default function Map({ location }: MapProps) {
   const handleMarkerClick = useCallback((id: number) => {
     const url = new URL(window.location.href)
     url.searchParams.set('id', id.toString())
-    window.history.pushState({}, '', url.toString())
-  }, [])
+    router.replace(url.toString(), { scroll: false })
+  }, [router])
 
   const getMarkerIcon = useCallback((category: string) => {
     const eventType = EventTypes.find((eventType) => eventType.title === category)

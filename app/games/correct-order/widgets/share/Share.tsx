@@ -1,20 +1,15 @@
 'use client'
 
 import styles from './Share.module.css'
-import { ItemType } from '@/app/components/content/Content'
+import type { EventItem, AttemptResult } from '@/app/types'
 import { useLanguageStore } from '@/app/stores/languageStore'
-
-interface AttemptResult {
-  attempt: number
-  results: { cardId: number; position: number; isCorrect: boolean }[]
-}
 
 interface ShareProps {
   attempts: number
   score: number
   onNewGame: () => void
   attemptHistory: AttemptResult[]
-  randomEvents: ItemType[]
+  randomEvents: EventItem[]
   totalScore: number
 }
 

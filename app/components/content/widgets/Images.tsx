@@ -3,17 +3,13 @@ import Image from 'next/image'
 import styles from './Images.module.css'
 import { useEventsData } from '@/app/helpers/data'
 import { useSearchParams } from 'next/navigation'
-import { ItemType } from '../Content'
+import { EventItem, EventImage } from '@/app/types'
 import ChevronLeft from '@/app/assets/icons/chevron-left.svg'
 import ChevronRight from '@/app/assets/icons/chevron-right.svg'
 import { useLanguageStore } from '@/app/stores/languageStore'
 import SourceLink from '@/app/components/source-link/SourceLink'
 
-export type ImageType = {
-  url: string
-  alt: string
-  source?: string
-}
+export type ImageType = EventImage
 
 export default function Images() {
   const { t } = useLanguageStore()
@@ -24,7 +20,7 @@ export default function Images() {
   const [currentImages, setCurrentImages] = useState<ImageType[]>([])
 
   const selectedItem =
-    events.find((item: ItemType) => item.id === Number(searchParams.get('id'))) || events[0]
+    events.find((item: EventItem) => item.id === Number(searchParams.get('id'))) || events[0]
 
   // Resimlere tıklanıp modal açılırken çağırılan fonksiyon
   const openModal = (image: ImageType | null) => {
@@ -73,10 +69,12 @@ export default function Images() {
               <Image
                 src={image.url}
                 alt={image.alt}
-                width={2000}
-                height={2000}
+                width={400}
+                height={300}
                 className={styles.thumb}
                 priority={index === 0}
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                loading={index === 0 ? 'eager' : 'lazy'}
               />
               <p title={`${t.InformationSource}: ${image.source}`}>
                 {image.alt}
@@ -111,10 +109,12 @@ export default function Images() {
               <Image
                 src={modalImage.url}
                 alt={modalImage.alt}
-                width={800}
-                height={800}
+                width={1200}
+                height={900}
                 className={styles.modalImage}
                 style={{ minWidth: '100%', maxWidth: '80dvw', height: 'auto' }}
+                sizes='80vw'
+                priority
               />
               <p title={`${t.InformationSource}: ${modalImage.source}`}>
                 {modalImage.alt}
