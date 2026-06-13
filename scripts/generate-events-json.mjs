@@ -49,10 +49,13 @@ function getEventsForLang(lang) {
 }
 
 const languages = ['tr', 'en', 'de', 'es', 'sv']
+const outputDir = path.join(process.cwd(), 'app/json')
+
+fs.mkdirSync(outputDir, { recursive: true })
 
 languages.forEach((lang) => {
   const events = getEventsForLang(lang)
-  const outputPath = path.join(process.cwd(), 'app/json', `events_${lang}.json`)
+  const outputPath = path.join(outputDir, `events_${lang}.json`)
 
   fs.writeFileSync(outputPath, JSON.stringify(events, null, 2), 'utf-8')
 })
