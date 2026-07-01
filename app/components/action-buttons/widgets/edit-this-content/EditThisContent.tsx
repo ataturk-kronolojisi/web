@@ -8,7 +8,7 @@ export default function EditThisContent() {
   const { t } = useLanguageStore()
   const searchParams = useSearchParams()
 
-  const url = `https://github.com/gayret/ataturk/blob/main/data/events/${searchParams.get(
+  const url = `https://github.com/ataturk-kronolojisi/web/blob/main/data/events/${searchParams.get(
     'language'
   )}/${searchParams.get('id') ?? 1}.md`
 

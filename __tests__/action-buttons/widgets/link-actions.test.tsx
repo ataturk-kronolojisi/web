@@ -51,7 +51,7 @@ describe('ActionButtons link widgets', () => {
       const link = screen.getByRole('link')
       expect(link).toHaveAttribute(
         'href',
-        'https://github.com/gayret/ataturk/blob/main/data/events/en/42.md',
+        'https://github.com/ataturk-kronolojisi/web/blob/main/data/events/en/42.md',
       )
     })
   })

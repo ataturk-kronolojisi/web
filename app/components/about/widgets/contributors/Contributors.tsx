@@ -197,7 +197,7 @@ export default function Contributors() {
         <section>
           <small>
             {t.About.Contributors.intro}&nbsp;
-            <Link href='https://github.com/gayret/ataturk' target='_blank'>
+            <Link href='https://github.com/ataturk-kronolojisi/web' target='_blank'>
               {t.About.Contributors.linkText}
             </Link>
             .
